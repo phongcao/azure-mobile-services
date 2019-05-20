@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 public class NotificationsManager {
 
     /**
@@ -33,17 +31,13 @@ public class NotificationsManager {
      * @param gcmAppId                  Google Cloud Messaging Application ID
      * @param notificationsHandlerClass NotificationHandler class used for handling notifications
      */
-    public static <T extends NotificationsHandler> void handleNotifications(final Context context, final String gcmAppId, final Class<T> notificationsHandlerClass) {
+    public static <T extends NotificationsHandler> void handleNotifications(final Context context, final String registrationId, final Class<T> notificationsHandlerClass) {
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
                     setHandler(notificationsHandlerClass, context);
-
-                    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-
-                    String registrationId = gcm.register(gcmAppId);
 
                     setRegistrationId(registrationId, context);
 
@@ -72,9 +66,6 @@ public class NotificationsManager {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-                    gcm.unregister();
-
                     String registrationId = getRegistrationId(context);
 
                     setRegistrationId(null, context);
